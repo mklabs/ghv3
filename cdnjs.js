@@ -1,7 +1,11 @@
-(function(exports, document) {
+(function(exports, document, $) {
   
   var tmpl = function tmpl(s,d){return s.replace(/:([a-z]+)/g, function(w,m){return d[m];});},
   uid = 0,
+  $ = $ || function qsa(sel, context) { 
+    context = context || document;
+    return Array.prototype.slice.call(context.querySelectorAll(sel)); 
+  },
   api = 'https://api.github.com/',
   
   // ## request
@@ -21,7 +25,7 @@
     var jsonpString = 'jsonp' + (++uid),
     script = document.createElement('script'),
     delim = /\?/.test(url) ? '&' : '?',
-    head = request.head ? request.head : (request.head = $('head'));
+    head = request.head ? request.head : (request.head = $('head')[0]);
     
     if(!callback) {
       callback = params;
@@ -45,13 +49,32 @@
     
     params.callback = jsonpString;
     script.src = tmpl(api + url + delim + 'callback=:callback', params);
-    head.append(script);
-  };
+    head.appendChild(script);
+  },
+  
+  // **cache**: implement caching stategy, based on sha.
+  // The cache holder is `cdnjs.cache`
+  cache = function cache(fn) {
+    return function(sha, cb) {
+      if(cdnjs.cache[sha]) { return cb(null, cdnjs.cache[sha]); }
+      
+      return fn(sha, function(err, results) {
+        if(err) { return console.error(err); }
+        // update cache holder
+        cdnjs.cache[sha] = results;
+        
+        // update latest sha
+        cdnjs.cache.latest = sha;
+        return cb(err, results);
+      });
+    };
+  }
   
   request.callbacks = [];
   
   
   exports.request = request;
+  exports.$ = $;
 
   // ## cdnsjs
   //
@@ -90,12 +113,18 @@
     if(sha) {
       return cdnjs.tree(sha, cb);
     }
+    
+    if(!sha && cdnjs.cache.latest) {
+      return cdnjs.tree(cdnjs.cache.latest, cb);
+    }
 
     cdnjs.sha(function(err, sha) {
       if(err) { return callback(err); }
       cdnjs.tree(sha, cb);
     });
   };
+  
+  cdnjs.cache = {};
 
   // **sha**: grab latest sha version
   cdnjs.sha = function sha(cb) {
@@ -116,7 +145,7 @@
   // * sha — required sha version
   // * cb — callback called with error, or null + data on success
   //
-  cdnjs.tree = function tree(sha, cb) {
+  cdnjs.tree = cache(function tree(sha, cb) {
     return request('/repos/:user/:repo/git/trees/:sha?recursive=1', {
       user: 'cdnjs',
       repo: 'cdnjs',
@@ -125,26 +154,48 @@
       if(err) { return cb(err); }
       cb(null, data);
     });
+  });
+  
+  
+  // **has**: text existence of a given lib
+  cdnjs.has = function has(lib, callback) {
+    var cb = function cb(err, data) {
+      if(err) { return console.error(err); }
+      
+      var libs = cdnjs.parse(data).filter(function(it) {
+        return lib === it.lib;
+      });
+      
+      if(!libs.length) {
+        return callback(new Error('no ' + lib + 'matching.'));
+      }
+       
+      callback(null, !!libs);
+    };
+    
+    return cdnjs.sha(function(err, sha) {
+      if(err) { return cb(err); }
+      cdnjs.tree(sha, cb);
+    });
   };
 
   // **parse**: default may be noop, just returning data. here,
   //  we return an array of object via underscore's filter, pluck, map methods.
   cdnjs.parse = function parse(data) {
-    return _(data.tree).chain()
+    return data.tree
       .filter(function(item){ 
         return item.type == "blob" && /\.js$/.test(item.path);
       })
-      .pluck('path')
       .map(function(p) {
-        var desc = p.match(/ajax\/libs\/([^\/]+)\/([^\/]+)\/(.+)$/);
+        var desc = p.path.match(/ajax\/libs\/([^\/]+)\/([^\/]+)\/(.+)$/);
+        
         return {
-          path: p,
+          path: p.path,
           lib: desc[1],
           version: desc[2],
           file: desc[3]
         };
-      })
-      .value();
+      });
   };  
 
 })(this, this.document);
