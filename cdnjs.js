@@ -2,10 +2,6 @@
   
   var tmpl = function tmpl(s,d){return s.replace(/:([a-z]+)/g, function(w,m){return d[m];});},
   uid = 0,
-  $ = $ || function qsa(sel, context) { 
-    context = context || document;
-    return Array.prototype.slice.call(context.querySelectorAll(sel)); 
-  },
   api = 'https://api.github.com/',
   
   // ## request
@@ -68,10 +64,12 @@
         return cb(err, results);
       });
     };
-  }
+  };
   
-  request.callbacks = [];
-  
+  $ = $ || function qsa(sel, context) { 
+    context = context || document;
+    return Array.prototype.slice.call(context.querySelectorAll(sel)); 
+  };
   
   exports.request = request;
   exports.$ = $;
@@ -145,6 +143,7 @@
   // * sha — required sha version
   // * cb — callback called with error, or null + data on success
   //
+  // Calls to `.tree` are cached, based on the sha provided.
   cdnjs.tree = cache(function tree(sha, cb) {
     return request('/repos/:user/:repo/git/trees/:sha?recursive=1', {
       user: 'cdnjs',
@@ -198,4 +197,4 @@
       });
   };  
 
-})(this, this.document);
+})(this, this.document, (this.jQuery || this.Zepto));
