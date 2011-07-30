@@ -78,25 +78,6 @@
     };
   };
   
-  /* * /
-  cache = function cache(fn, context) {
-    return function(sha, cb) {
-      if(_cache[sha]) { return cb(null, _cache[sha]); }
-      context = context || {};
-      return fn.call(context, sha, function(err, results) {
-        if(err) { return console.error(err); }
-        // update cache holder
-        _cache[sha] = results;
-        
-        // update latest sha
-        cdnjs.cache.latest = sha;
-        return cb(err, results);
-      });
-    };
-  };
-  
-  /* */
-  
   // use jquery/zepto, or fall back to custom based on `querySelectorAll`
   $ = $ || function qsa(sel, context) { 
     context = context || document;

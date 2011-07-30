@@ -4,7 +4,7 @@
   extend = $ && $.extend ? $.extend : function (a,c){for(var b in c)a[b]=c[b];return a;};
   // # Trees API
   //
-  // http://developer.github.com/v3/git/trees/
+  // > [http://developer.github.com/v3/git/trees/](http://developer.github.com/v3/git/trees/)
 
   var Tree = gh.Tree = function Tree(attr, options) {
     this.attr = (attr || {});

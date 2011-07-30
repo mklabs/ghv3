@@ -1,0 +1,74 @@
+<!DOCTYPE html>  <html> <head>   <title>tree.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="gh.html">                 gh.js               </a>                                           <a class="source" href="tree.html">                 tree.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               tree.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">gh</span><span class="p">,</span> <span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">gh</span><span class="p">.</span><span class="nx">request</span><span class="p">,</span>
+  <span class="nx">extend</span> <span class="o">=</span> <span class="nx">$</span> <span class="o">&amp;&amp;</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span> <span class="o">?</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">c</span><span class="p">){</span><span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">b</span> <span class="k">in</span> <span class="nx">c</span><span class="p">)</span><span class="nx">a</span><span class="p">[</span><span class="nx">b</span><span class="p">]</span><span class="o">=</span><span class="nx">c</span><span class="p">[</span><span class="nx">b</span><span class="p">];</span><span class="k">return</span> <span class="nx">a</span><span class="p">;};</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h1>Trees API</h1>
+
+<blockquote>
+  <p><a href="http://developer.github.com/v3/git/trees/">http://developer.github.com/v3/git/trees/</a></p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">Tree</span> <span class="o">=</span> <span class="nx">gh</span><span class="p">.</span><span class="nx">Tree</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">Tree</span><span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">attr</span> <span class="o">=</span> <span class="p">(</span><span class="nx">attr</span> <span class="o">||</span> <span class="p">{});</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">validate</span><span class="p">();</span>
+  <span class="p">};</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p><strong>sha</strong>: grab latest sha version
+   GET /repos/:user/:repo/git/refs/:ref</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Tree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sha</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">sha</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="nx">request</span><span class="p">(</span><span class="s1">&#39;/repos/:user/:repo/git/refs/:ref&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">attr</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">cb</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="p">}</span>
+      <span class="nx">cb</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">object</span><span class="p">.</span><span class="nx">sha</span><span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p><strong>tree</strong>: recursive read of the whole tree</p>
+
+<p><em>Arguments:</em></p>
+
+<ul>
+<li>sha — sha version (optionnal, use latest if not provided)</li>
+<li>cb — callback called with error, or null + data on success</li>
+</ul>
+
+<p>Calls to <code>.tree</code> are cached, based on the sha provided.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Tree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tree</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">tree</span><span class="p">(</span><span class="nx">sha</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">uri</span> <span class="o">=</span> <span class="s1">&#39;/repos/:user/:repo/git/trees/:sha?recursive=1&#39;</span><span class="p">,</span>
+    <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+    <span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">cb</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span> <span class="p">}</span>
+      <span class="nx">cb</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="p">};</span>
+    
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span> 
+      <span class="nx">cb</span> <span class="o">=</span> <span class="nx">sha</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">sha</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">sha</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="p">}</span>
+        <span class="nx">request</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">extend</span><span class="p">({</span><span class="nx">sha</span><span class="o">:</span> <span class="nx">sha</span><span class="p">},</span> <span class="k">this</span><span class="p">.</span><span class="nx">attr</span><span class="p">),</span> <span class="nx">callback</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="nx">request</span><span class="p">(</span><span class="s1">&#39;/repos/:user/:repo/git/trees/:sha?recursive=1&#39;</span><span class="p">,</span> <span class="nx">extend</span><span class="p">({</span><span class="nx">sha</span><span class="o">:</span> <span class="nx">sha</span><span class="p">},</span> <span class="k">this</span><span class="p">.</span><span class="nx">attr</span><span class="p">),</span> <span class="nx">callback</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p><strong>validate</strong>: Validate attributes against schema.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Tree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validate</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">validate</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">schema</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">schema</span><span class="p">,</span>
+    <span class="nx">attr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">attr</span><span class="p">;</span>
+    
+    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">schema</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">attr</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Missing &#39;</span> <span class="o">+</span> <span class="nx">prop</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="k">if</span><span class="p">(</span><span class="nx">attr</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">constructor</span> <span class="o">!==</span> <span class="nx">schema</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">prop</span> <span class="o">+</span> <span class="s1">&#39; must be a &#39;</span> <span class="o">+</span> <span class="nx">schema</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">name</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+  
+  <span class="nx">Tree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">schema</span> <span class="o">=</span> <span class="p">{</span><span class="nx">user</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span> <span class="nx">repo</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span> <span class="nx">ref</span><span class="o">:</span> <span class="nb">String</span><span class="p">};</span>
+  
+  
+  
+<span class="p">})(</span><span class="k">this</span><span class="p">.</span><span class="nx">gh</span><span class="p">,</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">jQuery</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">Zepto</span><span class="p">));</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
