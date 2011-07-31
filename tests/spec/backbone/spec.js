@@ -21,9 +21,29 @@
   
   describe('Gists', function() {
     
-    it("should have Gists api", function() {
+    it("should be able to list public users' gist", function() {
+      
+      var gists = new Gh.Gists(),
+      done = false;
+      
+      gists.list(function(err, results) {
+        runs(function() {
+          console.log('r: ', results);
+          expect(err).toBeNull();
+          expect(results).toBeDefined();
+          expect(results.length).toBeTruthy();
+        });
+        
+        done = true;
+      });
+      
       expect(Gh.Gist).toBeDefined();
       expect(Gh.Gists).toBeDefined();
+      
+      waitsFor(function() {
+        return done;
+      }, "github api request timeout", 10000);
+      
     });
     
   });
