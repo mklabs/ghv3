@@ -10,6 +10,7 @@ Github api v3 library. ideally, it should work in node via http request, and in 
 
 The only required dependency is [underscore](http://documentcloud.github.com/underscore/). Used mainly to implement class in a way similar to Backbone, thus enforcing functional programming style and providing a set of utility methods.
 
+May introduce [EventEmitter2](https://github.com/hij1nx/EventEmitter2) to provide emitter style, it has browser environment compatibility and may be used as a module than can be mixed in to any object in order to provide it with custom events an `emit`-ing ability.
     
 ## callbacks
 
@@ -30,7 +31,7 @@ The `gh.request` method is wrapped by the `gh.cache` method.
 
 ## tests
 
-Run the [tests](http://mklabs.github.com/ghv3/tests/gh.html).
+Run the [tests](http://mklabs.github.com/ghv3/tests/).
 
 ## quick api overview
 
@@ -85,11 +86,6 @@ Most likely any `GET` request is supported.
 [http://developer.github.com/v3/#client-errors](http://developer.github.com/v3/#client-errors)
 
 Callback functions can take any number of arguments, but the first argument is always an error or null.
-
-    
-## notes on sha
-
-most requests are based on sha. You may omit to specify the placeholder value. If not specified, the request method will get the latest sha from this repo, either by requesting the api or pulling from the cache, and then output the original request method.
 
 
 ## todo

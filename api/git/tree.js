@@ -1,77 +1,98 @@
-(function(gh, $) {
+(function(Gh) {
   
-  var request = gh.request,
-  extend = $ && $.extend ? $.extend : function (a,c){for(var b in c)a[b]=c[b];return a;};
   // # Trees API
   //
   // > [http://developer.github.com/v3/git/trees/](http://developer.github.com/v3/git/trees/)
-
-  var Tree = gh.Tree = function Tree(attr, options) {
-    this.attr = (attr || {});
+  
+  // Gh.Tree
+  // -----------------
+  
+  // Creating a Gh.Tree creates an new Tree instance.
+  var Tree = Gh.Tree = function Tree(options) {
+    this.cid = _.uniqueId('tree');
+    this._configure(options || {});
     this.validate();
+    this.initialize.apply(this, arguments);
   };
   
-  // **sha**: grab latest sha version
-  //    GET /repos/:user/:repo/git/refs/:ref
-  Tree.prototype.sha = function sha(cb) {
-    var self = this;
-    request('/repos/:user/:repo/git/refs/:ref', this.attr, function(err, data) {
-      if(err) { return cb(err); }
-      cb.call(self, null, data.object.sha);
-    });
-    
-    return this;
-  };
+  // List of tree options to be merged as properties.
+  var treeOptions = ['user', 'repo', 'sha', 'recursive'];
+
+  // List of required options to be merged as properties.  
+  var treeSchema = {user: String, repo: String, ref: String};
   
-  // **tree**: recursive read of the whole tree
-  //
-  // *Arguments:*
-  //
-  // * sha — sha version (optionnal, use latest if not provided)
-  // * cb — callback called with error, or null + data on success
-  //
-  // Calls to `.tree` are cached, based on the sha provided.
-  Tree.prototype.tree = function tree(sha, cb) {
-    var uri = '/repos/:user/:repo/git/trees/:sha?recursive=1',
-    self = this,
-    callback = function(err, data) {
-      if(err) { return cb.call(self, err); }
-      cb.call(self, null, data);
-    };
+  _.extend(Tree.prototype, Gh.Request, EventEmitter2.prototype, {
     
-    if(!cb) { 
-      cb = sha;
-      return this.sha(function(err, sha) {
-        if(err) { return callback(err); }
-        request(uri, extend({sha: sha}, this.attr), callback);
+    // Initialize is an empty function by default. Override it with your own
+    // initialization logic.
+    initialize : function(){},
+    
+    // **sha**: grab latest sha version
+    //    GET /repos/:user/:repo/git/refs/:ref
+    sha: function(cb) {
+      var self = this;
+      return this.request('/repos/:user/:repo/git/refs/:ref', this.options, function(err, data) {
+        if(err) { return cb.call(self, err); }
+        cb.call(self, null, data.object.sha);
       });
-    }
+    },
     
-    request('/repos/:user/:repo/git/trees/:sha?recursive=1', extend({sha: sha}, this.attr), callback);
-    
-    return this;
-  };
-  
-  // **validate**: Validate attributes against schema.
-  Tree.prototype.validate = function validate() {
-    var schema = this.schema,
-    attr = this.attr;
-    
-    for(var prop in schema) {
-      if(!attr[prop]) {
-        throw Error('Missing ' + prop);
+    // **tree**: recursive read of the whole tree
+    //
+    // *Arguments:*
+    //
+    // Calls to `.tree` are cached, based on the sha provided.
+    tree: function(sha, cb) {
+      var uri = '/repos/:user/:repo/git/trees/:sha?recursive=1',
+      self = this,
+      callback = function(err, data) {
+        if(err) { return cb.call(self, err); }
+        cb.call(self, null, data);
+      };
+
+      if(!cb) { 
+        cb = sha;
+        return this.sha(function(err, sha) {
+          if(err) { return callback(err); }
+          self.request(uri, _.extend({}, this.options, {sha: sha}), callback);
+        });
       }
+
+      return this.request(uri, _.extend({}, this.options, {sha: sha}), callback);
+    },
+    
+    // **validate**: Validate attributes against schema.
+    validate: function() {
+      var attr = this.options;
+      _.each(treeSchema, function(type, prop) {
+        if(!attr[prop]) {
+          throw Error('Missing ' + prop);
+        }
+        
+        if(attr[prop].constructor !== type) {
+          throw Error(prop + ' must be a ' + type.name);
+        }       
+      });
       
-      if(attr[prop].constructor !== schema[prop]) {
-        throw Error(prop + ' must be a ' + schema[prop].name);
-      }
-    }
+      return this;
+    },
     
-    return this;
-  };
+    // Performs the initial configuration of a Tree with a set of options.
+    // Keys with special meaning *(user, repo, sha)*, are
+    // attached directly to the tree.
+    _configure : function(options) {
+      if (this.options) options = _.extend({}, this.options, options);
+      for (var i = 0, l = treeOptions.length; i < l; i++) {
+        var attr = treeOptions[i];
+        if (options[attr]) this[attr] = options[attr];
+      }
+      this.options = options;
+    }
+  });
   
-  Tree.prototype.schema = {user: String, repo: String, ref: String};
+  // Set up inheritance for the tree object.
+  Tree.extend = Gh.extend;
   
   
   
-})(this.gh, (this.jQuery || this.Zepto));
+})(this.Gh);

@@ -1,6 +1,6 @@
-describe('gh.tree', function() {
+describe('Gh.tree', function() {
   
-  var t = new gh.Tree({user: 'mklabs', repo: 'backnode', ref: 'heads/master'}),
+  var t = new Gh.Tree({user: 'mklabs', repo: 'backnode', ref: 'heads/master'}),
   fn = function(err, results) {
     expect(err).toBeNull();
     expect(results).toBeDefined();
@@ -11,16 +11,27 @@ describe('gh.tree', function() {
   };
   
   it('should be cached by now', function() {
-    t.tree(fn);
-    t.tree(fn);
-    t.tree(fn);
-    t.tree(fn);
-    t.tree(fn);
+    var done = false;
+    t.tree(function() {
+      fn.apply(this, arguments);
+      t.tree(fn);
+      t.tree(fn);
+      t.tree(fn);
+      t.tree(fn);
+      t.tree(fn);
+      
+      done = true;
+    });
+    
+    
+    waitsFor(function() {
+      return done;
+    }, "github api request timeout", 10000);
   });
   
   it('should re-request if uri changes', function() {
     var done = false;
-    new gh.Tree({user: 'mklabs', repo: 'backnode', ref: 'foo/bar'})
+    new Gh.Tree({user: 'mklabs', repo: 'backnode', ref: 'foo/bar'})
       .tree(function(err, results) {
         runs(function(){
           expect(err).toBeTruthy();
@@ -33,7 +44,7 @@ describe('gh.tree', function() {
       return done;
     }, "github api request timeout", 10000);
     
-    new gh.Tree({user: 'github', repo: 'developer.github.com', ref: 'heads/master'})
+    new Gh.Tree({user: 'github', repo: 'developer.github.com', ref: 'heads/master'})
       .tree(function(err, results) {
         runs(function(){
           fn(err, results);
@@ -44,6 +55,6 @@ describe('gh.tree', function() {
     waitsFor(function() {
       return done;
     }, "github api request timeout", 10000);
-    
   });
+  
 });
