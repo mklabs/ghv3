@@ -81,13 +81,13 @@
   // reference to head element, so that we not query the dom on each request.
   _head;
   
-  // Gh.Request
+  // Gh.request
   // -----------------
 
   // A module that can be mixed in to *any object* in order to provide it with
   // request and caching ability. You may `request` a github uri endpoint.
   //
-  // TODO: provide EventEmitter interface.
+  // TODO: provide EventEmitter interface and response/error custom event.
   //
   //      var object = {};
   //      _.extend(object, Gh.Request);
@@ -96,11 +96,9 @@
   //        .on('response', _.bind(console.log, console))
   //        .on('error', _.bind(console.log, console))
   //
-  Gh.Request = {
-
-    // #### request
-    // Load JSON from a server in a different domain (JSONP)
-    //
+  Gh.request = {
+    
+    // **request**: Load JSON from a server in a different domain (JSONP).
     // *Arguments:*
     //
     // * url — with placeholder in the form of :placeholder
@@ -129,8 +127,7 @@
         callback(null, data);
         delete window[jsonpString];
       };
-
-      // clean trailing slash url
+      
       url = url.replace(/^\//, '');
 
       params.callback = jsonpString;
@@ -142,8 +139,54 @@
     cache : _cache
   };
   
-  // **gh.request**: shortcut to Gh.Request.request method.
-  Gh.request = Gh.Request.request;
+  
+  // Gh.Request
+  // -----------------
+  
+  // Provides a standard request class for our sets of api components, which should extend
+  // the request class to gain `request`-ing and `emit`-ing abilities.
+  Gh.Request = function(options) {
+    options = options || {};
+    this.cid = _.uniqueId('request');
+    this._configure(options);
+    if(this.validate) this._performValidation(options);
+    this.initialize.apply(this, arguments);
+  };
+  
+  _.extend(Gh.Request.prototype, EventEmitter2.prototype, Gh.request, {
+    
+    // Initialize is an empty function by default. Override it with your own
+    // initialization logic.
+    initialize : function(){},
+    
+    // Run validation against a set of incoming attributes, returning `true`
+    // if all is well. If a specific `error` callback has been passed,
+    // call that instead of firing the general `"error"` event.
+    _performValidation: function(attrs) {
+      var error = this.validate(attrs);
+      if (error) {
+        if(!this.emit('error', this, error)) {
+          // if there is no registered handler for the error event, just throw
+          throw (error instanceof Error ? error : new Error(error));
+        }
+        return false;
+      }
+      return true;
+    },
+    
+    // Performs the initial configuration of a Request object with a set of options.
+    // Keys with special meaning *(user, repo, sha)*, are
+    // attached directly to the tree.
+    _configure : function(options, props) {
+      if (this.options) options = _.extend({}, this.options, options);
+      props = props || [];
+      for (var i = 0, l = props.length; i < l; i++) {
+        var attr = props[i];
+        if (options[attr]) this[attr] = options[attr];
+      }
+      this.options = options;
+    }
+  });
   
   
   // Helpers
@@ -172,7 +215,9 @@
     if (protoProps && protoProps.hasOwnProperty('constructor')) {
       child = protoProps.constructor;
     } else {
-      child = function(){ return parent.apply(this, arguments); };
+      child = function(){ 
+        return parent.apply(this, arguments); 
+      };
     }
 
     // Inherit class (static) properties from parent.
@@ -198,6 +243,10 @@
 
     return child;
   };
+  
+  // Set up inheritance for the Request object.
+  Gh.Request.extend = Gh.extend;
+  
   
 
 })(this);

@@ -26,6 +26,7 @@ describe("Gh", function() {
     // tree is based on sha need to get latest
     var tree = new Gh.Tree({user: 'mklabs', repo: 'backnode', ref: 'heads/master'});
     var done = false;
+    
     tree.sha(function(err, sha) {
       runs(function() {
         expect(err).toBeNull();
