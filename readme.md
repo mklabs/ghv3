@@ -2,6 +2,16 @@
 
 Github api v3 library. ideally, it should work in node via http request, and in browsers using jsonp.
 
+**basice idea**: A backbone set of Model and Collections mapping the github api v3.
+
+* Gists
+* Users
+* Issues
+* Orgs
+* Repos
+
+just the pubic rest calls for now
+
 ## Quick docs
 
 [docco-generated docs](http://mklabs.github.com/ghv3/docs/gh.html)
