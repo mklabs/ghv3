@@ -1,4 +1,4 @@
-describe('Gh.tree', function() {
+describe('Gh.Tree', function() {
   
   var t = new Gh.Tree({user: 'mklabs', repo: 'backnode', ref: 'heads/master'}),
   fn = function(err, results) {
