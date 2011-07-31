@@ -40,7 +40,7 @@ Most likely any `GET` request is supported.
 
 ##### Gh.request
 
-** show user info**:
+**show user info**:
 
 [http://developer.github.com/v3/users/](http://developer.github.com/v3/users/)
 
@@ -48,7 +48,7 @@ Most likely any `GET` request is supported.
     gh.request('/users/:user', {user: 'github'}, console.log.bind(console));
     gh.request('/users/:user', {user: 'somefancynamethatdoesnotexists'}, console.log.bind(console));
     
-** show repo info**:
+**show repo info**:
 
 [http://developer.github.com/v3/repos/](http://developer.github.com/v3/repos/)
 
