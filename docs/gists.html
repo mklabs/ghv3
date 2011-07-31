@@ -1,0 +1,55 @@
+<!DOCTYPE html>  <html> <head>   <title>gists.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="gh.html">                 gh.js               </a>                                           <a class="source" href="gists.html">                 gists.js               </a>                                           <a class="source" href="tree.html">                 tree.js               </a>                                           <a class="source" href="user.html">                 user.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               gists.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <blockquote>
+  <p><a href="http://developer.github.com/v3/users/">http://developer.github.com/v3/users/</a></p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Gh</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Gh.Gist</h2>
+
+<p>Creating a Gh.Gist creates a new Gist instance.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Gh</span><span class="p">.</span><span class="nx">Gist</span> <span class="o">=</span> <span class="nx">Gh</span><span class="p">.</span><span class="nx">Request</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p><strong>list</strong>: List a user's gists.
+<em>may move to User api</em>*</p>
+
+<pre><code> GET /users/:user
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">list</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;/users/:user/gists&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span> <span class="nx">cb</span><span class="p">);</span>
+    <span class="p">},</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p><strong>list</strong>: List a user's gists.</p>
+
+<pre><code> GET /users/:user
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;/gists/:id&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span> <span class="nx">cb</span><span class="p">);</span>
+    <span class="p">},</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p><strong>comments</strong>: List comments on a gist.</p>
+
+<pre><code> GET /gists/:id/comments
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">comments</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;/gists/:id/comments&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span> <span class="nx">cb</span><span class="p">);</span>
+    <span class="p">},</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p><strong>comments</strong>: List comments on a gist.</p>
+
+<pre><code> GET /gists/:id/comments
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">comment</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;/gists/comments/:commentId&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span> <span class="nx">cb</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p><strong>validate</strong>: Validate attributes against schema.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">validate</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">attr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>      
+      <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">attr</span><span class="p">.</span><span class="nx">user</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">attr</span><span class="p">.</span><span class="nx">id</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">attr</span><span class="p">.</span><span class="nx">commentId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;Either a user, an id or a commentId prop is required&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+      
+      <span class="k">if</span><span class="p">(</span><span class="nx">attr</span><span class="p">.</span><span class="nx">user</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">attr</span><span class="p">.</span><span class="nx">user</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;user must be a String&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+      
+      <span class="k">if</span><span class="p">(</span><span class="nx">attr</span><span class="p">.</span><span class="nx">id</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">attr</span><span class="p">.</span><span class="nx">id</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;id must be a Number&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+      
+      <span class="k">if</span><span class="p">(</span><span class="nx">attr</span><span class="p">.</span><span class="nx">commentId</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">attr</span><span class="p">.</span><span class="nx">commentId</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;commentId must be a Number&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+      
+      <span class="k">return</span> <span class="nx">result</span><span class="p">.</span><span class="nx">length</span> <span class="o">?</span> <span class="nx">result</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  
+<span class="p">})(</span><span class="k">this</span><span class="p">.</span><span class="nx">Gh</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
