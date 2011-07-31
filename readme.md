@@ -8,6 +8,10 @@ Authenticated and full http rest verbs may only be used using the nodejs backend
 
 [docco-generated docs](http://mklabs.github.com/ghv3/docs/gh.html)
 
+#### dependencies
+
+The only required dependency is [underscore](http://documentcloud.github.com/underscore/). Used mainly to implement class in a way similar to Backbone, thus enforcing functional programming style and providing a set of utility methods.
+
     
 ## callbacks
 
@@ -29,3 +33,15 @@ The `gh.request` method is wrapped by the `gh.cache` method.
 ## tests
 
 Run the [tests](http://mklabs.github.com/ghv3/tests/gh.html).
+
+## todo
+
+
+
+## changelog
+
+* v.0.0.1:
+  * raw request method
+  * caching request output
+  * starting point of tree api
+  * tests
