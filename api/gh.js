@@ -37,7 +37,7 @@
   
   // template helper, used maily to do string concat
   tmpl = function tmpl(s, d) {
-    return s.replace(/:([a-z]+)/g, function(w, m) {
+    return s.replace(/:([a-z]+)/gi, function(w, m) {
       if(!d[m]) throw Error('Missing ' + m + ' property > ' + s);
       return d[m];
     });
