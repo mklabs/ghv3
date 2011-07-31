@@ -2,8 +2,6 @@
 
 Github api v3 library. ideally, it should work in node via http request, and in browsers using jsonp.
 
-Authenticated and full http rest verbs may only be used using the nodejs backend. The provided jsonp interface should stick with read-only and unauthenticated stuff.
-
 ## Quick docs
 
 [docco-generated docs](http://mklabs.github.com/ghv3/docs/gh.html)
@@ -35,8 +33,6 @@ The `gh.request` method is wrapped by the `gh.cache` method.
 Run the [tests](http://mklabs.github.com/ghv3/tests/gh.html).
 
 ## todo
-
-
 
 ## changelog
 
