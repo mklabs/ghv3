@@ -142,11 +142,14 @@
     cache : _cache
   };
   
+  // **gh.request**: shortcut to Gh.Request.request method.
+  Gh.request = Gh.Request.request;
+  
   
   // Helpers
   // -------
   // borrowed by the way of backbone
-  
+
   // The self-propagating extend function that Backbone classes use.
   Gh.extend = function (protoProps, classProps) {
     var child = inherits(this, protoProps, classProps);
